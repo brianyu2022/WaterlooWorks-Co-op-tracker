@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <p class="text-uppercase text-muted small mb-1">Career cockpit</p>
+      <h1 class="h3 fw-bold mb-0">Your co-op pipeline</h1>
+    </div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-secondary" href="{{ url_for('import_applications') }}">Import from WaterlooWorks</a>
+      <a class="btn btn-outline-primary" href="{{ url_for('add_application') }}">Log application</a>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card stat-card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <p class="text-muted text-uppercase small mb-1">Total</p>
+          <h4 class="fw-bold">{{ stats.total }}</h4>
+          <p class="text-muted mb-0">Applications tracked</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card stat-card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <p class="text-muted text-uppercase small mb-1">Interviews</p>
+          <h4 class="fw-bold text-info">{{ stats.interviews }}</h4>
+          <p class="text-muted mb-0">Screens + onsite</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card stat-card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <p class="text-muted text-uppercase small mb-1">Offers</p>
+          <h4 class="fw-bold text-success">{{ stats.offers }}</h4>
+          <p class="text-muted mb-0">In hand</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card stat-card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <p class="text-muted text-uppercase small mb-1">Response rate</p>
+          <h4 class="fw-bold">{{ stats.response_rate }}%</h4>
+          <p class="text-muted mb-0">Reached next step</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="card-title mb-0">Monthly applications</h5>
+            <span class="badge bg-primary-subtle text-primary fw-semibold">Pace</span>
+          </div>
+          <canvas id="velocityChart"
+            data-labels='{{ monthly_velocity | map(attribute=0) | list | tojson }}'
+            data-values='{{ monthly_velocity | map(attribute=1) | list | tojson }}'></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="card-title mb-0">Stage breakdown</h5>
+            <span class="badge bg-secondary-subtle text-secondary fw-semibold">Pipeline</span>
+          </div>
+          <canvas id="stageChart"
+            data-labels='{{ stage_breakdown | map(attribute=0) | list | tojson }}'
+            data-values='{{ stage_breakdown | map(attribute=1) | list | tojson }}'></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 mt-4">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h5 class="card-title mb-0">Recent activity</h5>
+          <p class="text-muted small mb-0">Latest 5 applications</p>
+        </div>
+        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('applications') }}">View all</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Company</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Applied</th>
+              <th>Follow up</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for app in recent %}
+              <tr>
+                <td>
+                  <div class="fw-semibold">{{ app.company }}</div>
+                  <div class="text-muted small">{{ app.location }}</div>
+                </td>
+                <td>{{ app.role }}</td>
+                <td><span class="badge bg-stage-{{ app.status|lower|replace(' ', '-') }}">{{ app.status }}</span></td>
+                <td>{{ app.applied_date }}</td>
+                <td>{{ app.follow_up_date or "—" }}</td>
+              </tr>
+            {% else %}
+              <tr><td colspan="5" class="text-center text-muted py-4">No applications yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+          <p class="text-uppercase text-muted small mb-1">Import</p>
+          <h1 class="h4 fw-bold mb-0">WaterlooWorks sync</h1>
+          <p class="text-muted small mb-0">Enter your campus login to pull applications automatically.</p>
+        </div>
+        <a class="btn btn-outline-secondary" href="{{ url_for('applications') }}">Back</a>
+      </div>
+
+      <div class="alert alert-warning">
+        Credentials are only used to log in and scrape in your browser session; they are not stored. Use on your own machine and log out afterward.
+      </div>
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <form method="post" class="row g-3">
+            <div class="col-12">
+              <label class="form-label">WaterlooWorks username</label>
+              <input type="text" name="username" class="form-control" placeholder="uwuserid@uwaterloo.ca" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Password</label>
+              <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="col-12">
+              <div class="form-text">
+                The scraper will log into WaterlooWorks, open your postings/applications page, and map statuses
+                (unfilled/filled/closed → Rejected; ranked → Ranked; offers/interviews detected).
+              </div>
+            </div>
+            <div class="col-12 d-flex justify-content-end">
+              <button class="btn btn-primary px-4" type="submit">Import now</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

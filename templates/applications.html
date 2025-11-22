@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <p class="text-uppercase text-muted small mb-1">Pipeline</p>
+      <h1 class="h4 fw-bold mb-0">All applications</h1>
+    </div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-secondary" href="{{ url_for('export_applications') }}">Download CSV</a>
+      <a class="btn btn-primary" href="{{ url_for('add_application') }}">Log new</a>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Company</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Applied</th>
+              <th>Follow up</th>
+              <th>Source</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for app in applications %}
+              <tr>
+                <td>
+                  <div class="fw-semibold">{{ app.company }}</div>
+                  <div class="text-muted small">{{ app.location }}</div>
+                </td>
+                <td>
+                  <div>{{ app.role }}</div>
+                  {% if app.url %}<a href="{{ app.url }}" class="small" target="_blank">Posting ↗</a>{% endif %}
+                </td>
+                <td><span class="badge bg-stage-{{ app.status|lower|replace(' ', '-') }}">{{ app.status }}</span></td>
+                <td>{{ app.applied_date }}</td>
+                <td>{{ app.follow_up_date or "—" }}</td>
+                <td>{{ app.source or "—" }}</td>
+                <td class="text-end">
+                  <div class="d-flex justify-content-end gap-2">
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('edit_application', app_id=app.id) }}">Edit</a>
+                    <form method="post" action="{{ url_for('delete_application', app_id=app.id) }}" onsubmit="return confirm('Delete this application?');">
+                      <button class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% else %}
+              <tr><td colspan="7" class="text-center text-muted py-4">No applications yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

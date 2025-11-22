@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+          <p class="text-uppercase text-muted small mb-1">{{ action }} Application</p>
+          <h1 class="h4 fw-bold mb-0">{{ application.company if application else "New entry" }}</h1>
+        </div>
+        <a class="btn btn-outline-secondary" href="{{ url_for('applications') }}">Back</a>
+      </div>
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <form method="post" class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Company</label>
+              <input type="text" name="company" class="form-control" required value="{{ application.company if application else '' }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Role</label>
+              <input type="text" name="role" class="form-control" required value="{{ application.role if application else '' }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Location</label>
+              <input type="text" name="location" class="form-control" value="{{ application.location if application else '' }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Status</label>
+              <select name="status" class="form-select">
+                {% set statuses = ['Applied', 'Phone Screen', 'Interview', 'Onsite', 'Offer', 'Rejected', 'Ranked'] %}
+                {% for status in statuses %}
+                  <option value="{{ status }}" {% if application and application.status == status %}selected{% endif %}>{{ status }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Applied date</label>
+              <input type="date" name="applied_date" class="form-control" value="{{ application.applied_date if application else '' }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Follow-up / response date</label>
+              <input type="date" name="follow_up_date" class="form-control" value="{{ application.follow_up_date if application else '' }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Source</label>
+              <input type="text" name="source" class="form-control" placeholder="WaterlooWorks, LinkedIn..." value="{{ application.source if application else '' }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Posting URL</label>
+              <input type="url" name="url" class="form-control" value="{{ application.url if application else '' }}">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Notes</label>
+              <textarea name="notes" class="form-control" rows="3" placeholder="Prep topics, contacts, next steps">{{ application.notes if application else '' }}</textarea>
+            </div>
+            <div class="col-12 d-flex justify-content-between align-items-center">
+              {% if application %}
+                <small class="text-muted">ID: {{ application.id }}</small>
+              {% else %}
+                <span></span>
+              {% endif %}
+              <button class="btn btn-primary px-4" type="submit">{{ action }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

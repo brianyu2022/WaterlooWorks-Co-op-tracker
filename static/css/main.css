@@ -1,0 +1,27 @@
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+.stat-card {
+  background: linear-gradient(120deg, #f7f9ff, #eef4ff);
+}
+
+.badge.bg-stage-applied { background-color: #e7f1ff; color: #0d6efd; }
+.badge.bg-stage-phone-screen { background-color: #fff3cd; color: #b58100; }
+.badge.bg-stage-interview,
+.badge.bg-stage-onsite { background-color: #e0f3ff; color: #0a8ecf; }
+.badge.bg-stage-offer { background-color: #d1f4e0; color: #0f8b3d; }
+.badge.bg-stage-rejected { background-color: #fde2e1; color: #c0392b; }
+.badge.bg-stage-ranked { background-color: #e3e7ff; color: #1c3faa; }
+
+.table-hover tbody tr:hover {
+  background-color: #f7fafe;
+}
+
+.card-title {
+  font-weight: 700;
+}
+
+.toast {
+  opacity: 1;
+}
