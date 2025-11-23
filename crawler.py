@@ -72,9 +72,29 @@ async def crawl_and_sync(
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=not headful)
         page = await browser.new_page()
-        await page.goto(login_url or target_url)
+        try:
+            await page.goto(login_url or target_url, timeout=10_000)
+        except PlaywrightTimeoutError:
+            print("login failed")  # website too slow to respond
+            await browser.close()
+            return -1
         if username and password:
             await try_login(page, username, password, login_wait_ms)
+            # Basic check for bad credentials using common error markers.
+            content_lower = (await page.content()).lower()
+            if any(
+                marker in content_lower
+                for marker in [
+                    "invalid password",
+                    "incorrect password",
+                    "wrong password",
+                    "invalid login",
+                    "authentication failed",
+                ]
+            ):
+                print("password incorrect prompt")
+                await browser.close()
+                return -1
         if nav_link_text:
             try:
                 await page.get_by_text(nav_link_text, exact=False).click()
@@ -82,7 +102,12 @@ async def crawl_and_sync(
             except PlaywrightTimeoutError:
                 pass
         if target_url:
-            await page.goto(target_url)
+            try:
+                await page.goto(target_url, timeout=10_000)
+            except PlaywrightTimeoutError:
+                print("login failed")
+                await browser.close()
+                return -1
 
         rows = await page.query_selector_all(row_selector)
         conn = get_db()
@@ -164,6 +189,11 @@ def main() -> None:
             source_label=args.source_label,
         )
     )
+<<<<<<< HEAD
+=======
+    if count < 0:
+        raise SystemExit(1)
+>>>>>>> 1e7b2df (Add co-op tracker app with crawler login handling)
     print(f"Imported or updated {count} applications.")
 
 
