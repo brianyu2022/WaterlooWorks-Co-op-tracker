@@ -189,11 +189,8 @@ def main() -> None:
             source_label=args.source_label,
         )
     )
-<<<<<<< HEAD
-=======
     if count < 0:
         raise SystemExit(1)
->>>>>>> 1e7b2df (Add co-op tracker app with crawler login handling)
     print(f"Imported or updated {count} applications.")
 
 
